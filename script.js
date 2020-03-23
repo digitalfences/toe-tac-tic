@@ -1,17 +1,21 @@
-let reset=document.querySelector(".reset-button");
+let resetButton=document.querySelector(".reset-button");
 let squares=document.querySelectorAll(".square");
 //squares.forEach(square => square.addEventListener("click", activate))
 for (let i = 0; i < squares.length; i++){
     squares[i].style.backgroundColor = "whitesmoke";
     squares[i].addEventListener('click', activate);
 }
+resetButton.addEventListener('click',reset);
 /*
 Class Declarations
 Player
 Board
-Squares
 
 */
+
+//class Square{}
+
+
 
 class Board{
     constructor(){
@@ -28,10 +32,12 @@ class Board{
         this.upNext == 0;
         this.playerOrder();
     }
+    //Properties of Board
     grid;
     players;
     turnCount;
     upNext;
+    //Methods of Board
     playerOrder(){ 
         if(this.turnCount == 0){
             if(Math.random() > Math.random()){
@@ -52,32 +58,58 @@ class Board{
     }
     checkForWin(){
         let winningCombinations = [
-            [1,2,3],
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
             [1,4,7],
-            [1,5,9],
             [2,5,8],
-            [3,6,9],
-            [4,5,6],
-            [7,8,9]
+            [3,4,5],
+            [6,7,8]
         ]
-        let boardState = [
-            [],
-            [],
-            []
-        ]
-        for (let i = 0; i < this.grid.length; i++){
-            checkWhoClicked;
-        }
+
+        /*
+        Main Game victory logic
+        check index of grid and board state for patterns that match a win state
+        if one is found, end game with victory for winning player
+        */
+       for (let i = 0; i < winningCombinations.length; i++){
+             
+            if(this.grid[winningCombinations[i][0]].style.backgroundColor==this.grid[winningCombinations[i][1]].style.backgroundColor&&this.grid[winningCombinations[i][0]].style.backgroundColor == this.grid[winningCombinations[i][2]].style.backgroundColor){
+                let color = this.grid[winningCombinations[i][0]].style.backgroundColor
+                if (color == "whitesmoke"){
+                    continue;
+                }
+                else if (color == "red"){
+                    alert("Player 1 wins");
+                    return;
+                }
+                else if (color == "blue"){
+                    alert("Player 2 wins");
+                    return;
+                }
+           }  
+       }
+       let blankCount = 0;
+       for (let i = 0; i < this.grid.length; i++){
+            if (this.grid[i].style.backgroundColor == "whitesmoke"){
+                blankCount++;
+            }
+       }
+       if (blankCount == 0){
+           alert("it's a tie");
+           return;
+       }
+
     }
     checkWhoClicked(i){
         if(this.grid[i].style.backgroundColor=="whitesmoke"){
-            return;
+            return '';
         }
         else if (this.grid[i].style.backgroundColor=="red"){
-            return players[0];
+            return 0;
         }
         else{
-            return players[1];
+            return 1;
         }
     }
 }
@@ -90,6 +122,7 @@ class Player{
     playerColor;
     squarePickedLast;
 }
+
 let gameState = new Board();
 
 
@@ -108,4 +141,10 @@ function activate(e){
         gameState.playerOrder();
     }
     gameState.checkForWin();
+}
+function reset(e){
+    e.preventDefault();
+    for(let i =0; i < squares.length; i++){
+        squares[i].style.background = 'whitesmoke';
+    }
 }
